@@ -1,0 +1,3 @@
+/home/pi/project/PiTwins/cmake-build-pi-debug/CMakeFiles/rebuild_cache.dir
+/home/pi/project/PiTwins/cmake-build-pi-debug/CMakeFiles/PiTwins.dir
+/home/pi/project/PiTwins/cmake-build-pi-debug/CMakeFiles/edit_cache.dir

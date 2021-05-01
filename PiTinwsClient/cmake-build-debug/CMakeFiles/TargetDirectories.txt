@@ -1,4 +1,0 @@
-D:/Pi/PiTwins/PiTinwsClient/cmake-build-debug/CMakeFiles/PiTwinsClient.dir
-D:/Pi/PiTwins/PiTinwsClient/cmake-build-debug/CMakeFiles/libzmq.dir
-D:/Pi/PiTwins/PiTinwsClient/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Pi/PiTwins/PiTinwsClient/cmake-build-debug/CMakeFiles/rebuild_cache.dir

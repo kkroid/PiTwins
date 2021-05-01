@@ -1,0 +1,9 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/willzhang/CLionProjects/PiTwins
+CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+Please set them or make sure they are set and tested correctly in the CMake files:
+wiringPi_LIB
+    linked by target "PiTwins" in directory /Users/willzhang/CLionProjects/PiTwins
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/willzhang/CLionProjects/PiTwins/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/Users/willzhang/CLionProjects/PiTwins/cmake-build-debug/CMakeFiles/CMakeError.log".
