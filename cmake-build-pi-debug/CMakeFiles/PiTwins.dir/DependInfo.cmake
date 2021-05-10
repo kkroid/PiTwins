@@ -14,6 +14,7 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../ThirdParty/cptl"
   "../ThirdParty/json"
+  "../ThirdParty/spdlog"
   "../Public"
   "/usr/local/include/opencv4"
   )

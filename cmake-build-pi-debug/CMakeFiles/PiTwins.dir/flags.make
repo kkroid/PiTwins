@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/pi/project/PiTwins/ThirdParty/cptl -I/home/pi/project/PiTwins/ThirdParty/json -I/home/pi/project/PiTwins/Public -isystem /usr/local/include/opencv4 
+CXX_INCLUDES = -I/home/pi/project/PiTwins/ThirdParty/cptl -I/home/pi/project/PiTwins/ThirdParty/json -I/home/pi/project/PiTwins/ThirdParty/spdlog -I/home/pi/project/PiTwins/Public -isystem /usr/local/include/opencv4 
 

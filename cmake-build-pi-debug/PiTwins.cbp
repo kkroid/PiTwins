@@ -5,7 +5,7 @@
 		<Option title="PiTwins"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\usr\local\share\cmake\;CMake Files\..\..\..\..\usr\local\share\cmake\cppzmq\;CMake Files\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\usr\local\lib\cmake\ZeroMQ\;CMake Files\..\..\..\..\usr\local\lib\cmake\opencv4\;CMake Files\..\..\..\..\usr\local\lib\cmake\spdlog\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\share\;CMake Files\..\..\..\..\usr\local\share\cmake\;CMake Files\..\..\..\..\usr\local\share\cmake\cppzmq\;CMake Files\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\usr\local\lib\cmake\ZeroMQ\;CMake Files\..\..\..\..\usr\local\lib\cmake\opencv4\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/pi/project/PiTwins/cmake-build-pi-debug"/>
@@ -36,6 +36,7 @@
 				<Compiler>
 					<Add directory="/home/pi/project/PiTwins/ThirdParty/cptl"/>
 					<Add directory="/home/pi/project/PiTwins/ThirdParty/json"/>
+					<Add directory="/home/pi/project/PiTwins/ThirdParty/spdlog"/>
 					<Add directory="/home/pi/project/PiTwins/Public"/>
 					<Add directory="/usr/local/include/opencv4"/>
 					<Add directory="/usr/include/c++/8"/>
@@ -63,6 +64,7 @@
 				<Compiler>
 					<Add directory="/home/pi/project/PiTwins/ThirdParty/cptl"/>
 					<Add directory="/home/pi/project/PiTwins/ThirdParty/json"/>
+					<Add directory="/home/pi/project/PiTwins/ThirdParty/spdlog"/>
 					<Add directory="/home/pi/project/PiTwins/Public"/>
 					<Add directory="/usr/local/include/opencv4"/>
 					<Add directory="/usr/include/c++/8"/>
@@ -139,18 +141,6 @@
 		</Unit>
 		<Unit filename="/home/pi/project/PiTwins/../../../../usr/local/lib/cmake/opencv4/OpenCVModules.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\opencv4\"/>
-		</Unit>
-		<Unit filename="/home/pi/project/PiTwins/../../../../usr/local/lib/cmake/spdlog/spdlogConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\spdlog\"/>
-		</Unit>
-		<Unit filename="/home/pi/project/PiTwins/../../../../usr/local/lib/cmake/spdlog/spdlogConfigTargets-release.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\spdlog\"/>
-		</Unit>
-		<Unit filename="/home/pi/project/PiTwins/../../../../usr/local/lib/cmake/spdlog/spdlogConfigTargets.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\spdlog\"/>
-		</Unit>
-		<Unit filename="/home/pi/project/PiTwins/../../../../usr/local/lib/cmake/spdlog/spdlogConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\spdlog\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -32,6 +32,9 @@ public:
 
     ~VideoPublisher() override {
         spdlog::info("VideoPublisher released");
+        if (videoCapture) {
+            videoCapture->release();
+        }
         delete videoCapture;
         cvDetector.destroy();
     }
@@ -40,7 +43,7 @@ public:
         spdlog::info("VideoPublisher started");
         videoCapture = new VideoCapture(0);
         videoCapture->set(CAP_PROP_FPS, 10);
-        videoCapture->set(CAP_PROP_FRAME_WIDTH, 480);
+        videoCapture->set(CAP_PROP_FRAME_WIDTH, 640);
         videoCapture->set(CAP_PROP_FRAME_HEIGHT, 480);
         videoCapture->set(CAP_PROP_AUTO_WB, 1);
         videoCapture->set(CAP_PROP_AUTOFOCUS, 1);

@@ -1,4 +1,5 @@
 /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/pi/project/PiTwins
+-- current platform: Linux
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/pi/project/PiTwins/cmake-build-pi-debug

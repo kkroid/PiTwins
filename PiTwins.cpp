@@ -4,12 +4,13 @@
 #include <StatusPublisher.h>
 #include "json.hpp"
 #include "zmq.hpp"
-
+#ifdef Pi
 #include "servo.h"
 
 #define PIN_BASE 300
 #define MAX_PWM 4096
 #define HERTZ 40
+#endif
 
 
 using namespace std;
@@ -20,6 +21,7 @@ const auto ZMQ_PUB_ADDR = "tcp://*:5555";
 const auto ZMQ_PULL_ADDR = "tcp://*:5556";
 
 
+#ifdef Pi
 void CMDReceiverThread(socket_t *receiver) {
     Servo *servo = Servo::getInstance();
     wiringPiSetup();
@@ -70,6 +72,7 @@ void CMDReceiverThread(socket_t *receiver) {
     }
     receiver->close();
 }
+#endif
 
 void VideoPublisherThread(socket_t *publisher) {
     Publisher *videoPublisher = new VideoPublisher(publisher);
@@ -91,14 +94,18 @@ int main() {
     receiver = new socket_t(ctx, zmq::socket_type::pull);
     receiver->bind(ZMQ_PULL_ADDR);
 
+#ifdef Pi
     auto cmdReceiverThread = async(launch::async, CMDReceiverThread, receiver);
+#endif
 
     auto videoPublisherThread = async(launch::async, VideoPublisherThread, publisher);
     auto statusPublisherThread = async(launch::async, StatusPublisherThread, publisher);
     videoPublisherThread.wait();
     statusPublisherThread.wait();
     publisher->close();
+#ifdef Pi
     cmdReceiverThread.wait();
+#endif
 
     cout << "thread done" << endl;
 }
