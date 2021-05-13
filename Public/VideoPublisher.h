@@ -25,9 +25,11 @@ public:
         spdlog::info("VideoPublisher created");
         cvDetector.create("../data/lbpcascade_frontalface.xml");
         // params.push_back(IMWRITE_WEBP_QUALITY);
-        // params.push_back(60);
+        // params.push_back(100);
         params.push_back(IMWRITE_JPEG_QUALITY);
         params.push_back(60);
+        // params.push_back(IMWRITE_JPEG_OPTIMIZE);
+        // params.push_back(1);
     }
 
     ~VideoPublisher() override {
@@ -39,10 +41,12 @@ public:
         cvDetector.destroy();
     }
 
-    void start() override {
-        spdlog::info("VideoPublisher started");
-        videoCapture = new VideoCapture(0);
-        videoCapture->set(CAP_PROP_FPS, 10);
+    void start(char *id) override {
+        spdlog::info("VideoPublisher started:{}", id);
+        videoCapture = new VideoCapture(id == nullptr ? -1 : atoi(id));
+        // videoCapture = new VideoCapture("http://127.0.0.1:8081/?action=stream");
+        int ret = videoCapture->set(CAP_PROP_FPS, 30);
+        spdlog::info("set fps success:{}, read:{}", ret, videoCapture->get(CAP_PROP_FPS));
         videoCapture->set(CAP_PROP_FRAME_WIDTH, 640);
         videoCapture->set(CAP_PROP_FRAME_HEIGHT, 480);
         videoCapture->set(CAP_PROP_AUTO_WB, 1);

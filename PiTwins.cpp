@@ -4,8 +4,15 @@
 #include <StatusPublisher.h>
 #include "json.hpp"
 #include "zmq.hpp"
+
 #ifdef Pi
+#if OLD_SERVO_DRIVER
+
 #include "servo.h"
+
+#else
+#include "Emakefun_MotorShield.h"
+#endif
 
 #define PIN_BASE 300
 #define MAX_PWM 4096
@@ -22,27 +29,36 @@ const auto ZMQ_PULL_ADDR = "tcp://*:5556";
 
 
 #ifdef Pi
+
 void CMDReceiverThread(socket_t *receiver) {
+#if OLD_SERVO_DRIVER
     Servo *servo = Servo::getInstance();
     wiringPiSetup();
     int fd = servo->pca9685Setup(PIN_BASE, 0x40, HERTZ);
     if (fd < 0) {
-        cout << "Error in setup" << endl;
+        spdlog::error("Error in setup");
         return;
     }
+
     // Reset all output
     servo->pca9685PWMReset(fd);
     // pwmWrite(PIN_BASE + 16, 400);
+#else
+    Emakefun_MotorShield Pwm(0x40);
+    Pwm.begin(50);
+    Emakefun_Servo *myServo1 = Pwm.getServo(1);
+    Emakefun_Servo *myServo2 = Pwm.getServo(2);
+#endif
     int location = 250;
     int location2 = 200;
     while (true) {
         zmq::message_t msg;
         const auto ret = receiver->recv(msg, recv_flags::none);
         if (!ret) {
-            cout << "CMDReceiver received error:" << ret.value() << endl;
+            spdlog::error("CMDReceiver received error:{}", ret.value());
             break;
         }
-        cout << "CMDReceiver received:" << msg.to_string() << endl;
+        spdlog::info("CMDReceiver received:{}", msg.to_string());
 
         json obj = json::parse(msg.to_string());
         int pin = obj["payload"]["pin"];
@@ -52,19 +68,37 @@ void CMDReceiverThread(socket_t *receiver) {
         switch (key) {
             case 0:
                 location2 -= interval;
+#if OLD_SERVO_DRIVER
                 pwmWrite(pin + 1, location2);
+#else
+                myServo1->writeServo(location2);
+#endif
+                spdlog::info("pin:{}, location2:{}", pin + 1, location2);
                 break;
             case 1:
                 location2 += interval;
+#if OLD_SERVO_DRIVER
                 pwmWrite(pin + 1, location2);
+#else
+                myServo1->writeServo(location2);
+#endif
+                spdlog::info("pin:{}, location2:{}", pin + 1, location2);
                 break;
             case 2:
                 location += interval;
+#if OLD_SERVO_DRIVER
                 pwmWrite(pin, location);
+#else
+                myServo2->writeServo(location);
+#endif
                 break;
             case 3:
                 location -= interval;
+#if OLD_SERVO_DRIVER
                 pwmWrite(pin, location);
+#else
+                myServo2->writeServo(location);
+#endif
                 break;
             default:
                 break;
@@ -72,20 +106,21 @@ void CMDReceiverThread(socket_t *receiver) {
     }
     receiver->close();
 }
+
 #endif
 
-void VideoPublisherThread(socket_t *publisher) {
+void VideoPublisherThread(socket_t *publisher, char* id) {
     Publisher *videoPublisher = new VideoPublisher(publisher);
-    videoPublisher->start();
+    videoPublisher->start(id);
 }
 
 void StatusPublisherThread(socket_t *publisher) {
     Publisher *statusPublisher = new StatusPublisher(publisher);
-    statusPublisher->start();
+    statusPublisher->start(nullptr);
 }
 
-int main() {
-    cout << "start zmq server" << endl;
+int main(int argc, char *argv[]) {
+    spdlog::info("start zmq server:{}", argv[1]);
     zmq::context_t ctx;
     socket_t *publisher;
     socket_t *receiver;
@@ -98,7 +133,7 @@ int main() {
     auto cmdReceiverThread = async(launch::async, CMDReceiverThread, receiver);
 #endif
 
-    auto videoPublisherThread = async(launch::async, VideoPublisherThread, publisher);
+    auto videoPublisherThread = async(launch::async, VideoPublisherThread, publisher, argv[1]);
     auto statusPublisherThread = async(launch::async, StatusPublisherThread, publisher);
     videoPublisherThread.wait();
     statusPublisherThread.wait();
@@ -106,6 +141,5 @@ int main() {
 #ifdef Pi
     cmdReceiverThread.wait();
 #endif
-
-    cout << "thread done" << endl;
+    spdlog::info("thread done");
 }

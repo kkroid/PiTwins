@@ -31,15 +31,15 @@ public:
         delete threadPool;
     };
 
-    virtual void start() = 0;
+    virtual void start(char *id) = 0;
 
     virtual void publish(const_buffer buffer, send_flags flags) {
         // threadPool->push([this, buffer, flags](int id) {
         // });
+        // spdlog::info("Send frame started");
         size_t size = buffer.size();
-        // TODO 解决发送时间过长的问题
         publisher->send(buffer, flags);
-        spdlog::info("Send a frame, size:{}", size);
+        // spdlog::info("Frame sent, size:{}", size);
     };
 };
 

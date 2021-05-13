@@ -13,7 +13,7 @@ public:
     explicit StatusPublisher(socket_t *publisher) : Publisher(publisher) {
     }
 
-    void start() override {
+    void start(char *string1) override {
 
     }
 };
