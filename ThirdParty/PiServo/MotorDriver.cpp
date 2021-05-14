@@ -1,22 +1,22 @@
-#include "Emakefun_MotorDriver.h"
+#include "MotorDriver.h"
 
 
-Emakefun_MotorDriver::Emakefun_MotorDriver(uint8_t addr) {
+MotorDriver::MotorDriver(uint8_t addr) {
   _i2caddr = addr;
 }
 
-void Emakefun_MotorDriver::begin(void) {
-  Raspi_I2C::init(_i2caddr);
-  this->fd = Raspi_I2C::fd;
+void MotorDriver::begin(void) {
+  RaspiI2C::init(_i2caddr);
+  this->fd = RaspiI2C::fd;
   reset();
 }
 
 
-void Emakefun_MotorDriver::reset(void) {
+void MotorDriver::reset(void) {
   write8(PCA9685_MODE1, 0x00);
 }
 
-void Emakefun_MotorDriver::setPWMFreq(float freq) {
+void MotorDriver::setPWMFreq(float freq) {
   //printf("Attempting to set freq :%lf \n",freq);
   
   freq *= 0.9;  // Correct for overshoot in the frequency setting (see issue #11).
@@ -38,7 +38,7 @@ void Emakefun_MotorDriver::setPWMFreq(float freq) {
   //  Serial.print("Mode now 0x"); Serial.println(read8(PCA9685_MODE1), HEX);
 }
 
-void Emakefun_MotorDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
+void MotorDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
   //Serial.print("Setting PWM "); Serial.print(num); Serial.print(": "); Serial.print(on); Serial.print("->"); Serial.println(off);
 
   write8(LED0_ON_L+4*num, on & 0xFF);
@@ -47,10 +47,10 @@ void Emakefun_MotorDriver::setPWM(uint8_t num, uint16_t on, uint16_t off) {
   write8(LED0_OFF_H+4*num, off >> 8); 
 }
 
-uint8_t Emakefun_MotorDriver::read8(uint8_t addr) {
+uint8_t MotorDriver::read8(uint8_t addr) {
   return ReadReg8(addr);
 }
 
-void Emakefun_MotorDriver::write8(uint8_t addr, uint8_t d) {
+void MotorDriver::write8(uint8_t addr, uint8_t d) {
   WriteReg8(addr, d);
 }

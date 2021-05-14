@@ -11,7 +11,7 @@
 #include "servo.h"
 
 #else
-#include "Emakefun_MotorShield.h"
+#include "MotorShield.h"
 #endif
 
 #define PIN_BASE 300
@@ -44,10 +44,10 @@ void CMDReceiverThread(socket_t *receiver) {
     servo->pca9685PWMReset(fd);
     // pwmWrite(PIN_BASE + 16, 400);
 #else
-    Emakefun_MotorShield Pwm(0x40);
+    MotorShield Pwm(0x40);
     Pwm.begin(50);
-    Emakefun_Servo *myServo1 = Pwm.getServo(1);
-    Emakefun_Servo *myServo2 = Pwm.getServo(2);
+    Servo *myServo1 = Pwm.getServo(1);
+    Servo *myServo2 = Pwm.getServo(2);
 #endif
     int location = 250;
     int location2 = 200;

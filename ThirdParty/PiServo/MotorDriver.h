@@ -1,6 +1,7 @@
 #ifndef _Emakefun_MotorDriver_H
 #define _Emakefun_MotorDriver_H
-#include "Raspi_i2c.h"
+
+#include "RaspiI2c.h"
 
 #define PCA9685_SUBADR1 0x2
 #define PCA9685_SUBADR2 0x3
@@ -20,21 +21,25 @@
 #define ALLLED_OFF_H 0xFD
 
 
-class Emakefun_MotorDriver: public Raspi_I2C 
-{
- public:
-  Emakefun_MotorDriver(uint8_t addr = 0x60);
-  void begin(void);
-  void reset(void);
-  void setPWMFreq(float freq);
-  void setPWM(uint8_t num, uint16_t on, uint16_t off);
+class MotorDriver : public RaspiI2C {
+public:
+    explicit MotorDriver(uint8_t addr = 0x60);
 
- private:
-  uint8_t _i2caddr;
-  int fd;
+    void begin();
 
-  uint8_t read8(uint8_t addr);
-  void write8(uint8_t addr, uint8_t d);
+    void reset();
+
+    void setPWMFreq(float freq);
+
+    void setPWM(uint8_t num, uint16_t on, uint16_t off);
+
+private:
+    uint8_t _i2caddr;
+    int fd;
+
+    uint8_t read8(uint8_t addr);
+
+    void write8(uint8_t addr, uint8_t d);
 };
 
 #endif
