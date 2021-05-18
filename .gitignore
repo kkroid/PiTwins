@@ -21,7 +21,7 @@
 *.app
 
 .idea
-cmake-build-pi-debug
+cmake-build-debug-pi
 cmake-build-debug-system
 cmake-build-debug
 build

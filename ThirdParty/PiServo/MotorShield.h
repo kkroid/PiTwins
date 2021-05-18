@@ -44,7 +44,7 @@ public:
 
     void setSpeed(uint8_t);
 
-    uint8_t _speed, IN1pin, IN2pin, MDIR;
+    uint8_t _speed, IN1pin, IN2pin, MDIR{};
     MotorShield *MC;
     uint8_t motornum;
 };
@@ -59,17 +59,17 @@ public:
 
     void setSpeed(uint16_t speed);
 
-    uint8_t onestep(uint8_t dir, uint8_t style);
+    uint8_t oneStep(uint8_t dir, uint8_t style);
 
     void release();
 
-    uint32_t usperstep;
+    uint32_t usperstep{};
 
-    uint8_t PWMApin, AIN1pin, AIN2pin;
-    uint8_t PWMBpin, BIN1pin, BIN2pin;
+    uint8_t PWMApin{}, AIN1pin{}, AIN2pin{};
+    uint8_t PWMBpin{}, BIN1pin{}, BIN2pin{};
     uint16_t revsteps; // # steps per revolution
     uint8_t currentstep;
-    MotorShield *MC;
+    MotorShield *MC{};
     uint8_t steppernum;
 };
 
@@ -86,7 +86,7 @@ public:
     uint8_t readDegrees();
 
     uint8_t PWMpin;
-    uint16_t PWMfreq;
+    uint16_t PWMfreq{};
     MotorShield *MC;
     uint8_t servonum, currentAngle;
 };
@@ -111,7 +111,7 @@ public:
 
 private:
     uint8_t _addr;
-    uint16_t _freq;
+    uint16_t _freq{};
     Servo servos[8];
     DCMotor dcmotors[4];
     StepperMotor steppers[2];

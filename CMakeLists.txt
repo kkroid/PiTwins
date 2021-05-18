@@ -6,8 +6,6 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     add_definitions(-DPi=1)
 ENDIF ()
 
-add_definitions(-DOLD_SERVO_DRIVER=1)
-
 #find_package(cppzmq)
 find_package(Threads)
 find_package(OpenCV REQUIRED)

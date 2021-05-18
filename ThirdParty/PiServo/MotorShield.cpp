@@ -35,13 +35,13 @@ void MotorShield::setPin(uint8_t pin, uint8_t value) {
 
 DCMotor *MotorShield::getMotor(uint8_t num) {
     if (num > 4) {
-        return NULL;
+        return nullptr;
     }
     num--;
     if (dcmotors[num].motornum == 0) {
         dcmotors[num].motornum = num;
         dcmotors[num].MC = this;
-        uint8_t in1, in2;
+        uint8_t in1 = 0, in2 = 0;
         if (num == 0) {
             in2 = 13;
             in1 = 11;
@@ -65,14 +65,14 @@ DCMotor *MotorShield::getMotor(uint8_t num) {
 
 StepperMotor *MotorShield::getStepper(uint16_t steps, uint8_t num) {
     if (num > 2) {
-        return NULL;
+        return nullptr;
     }
     num--;
     if (steppers[num].steppernum == 0) {
         steppers[num].steppernum = num;
         steppers[num].revsteps = steps;
         steppers[num].MC = this;
-        uint8_t pwma, pwmb, ain1, ain2, bin1, bin2;
+        uint8_t pwma = 0, pwmb = 0, ain1 = 0, ain2 = 0, bin1 = 0, bin2 = 0;
         if (num == 0) {
             ain1 = 11;
             ain2 = 13;
@@ -95,8 +95,10 @@ StepperMotor *MotorShield::getStepper(uint16_t steps, uint8_t num) {
 }
 
 Servo *MotorShield::getServo(uint8_t num) {
-    uint8_t pwm_pin[8] = {0, 1, 14, 15, 9, 12, 3, 6};
-    if (num > 8) return NULL;
+    int pwm_pin[8] = {0, 1, 14, 15, 9, 12, 3, 6};
+    if (num > 8) {
+        return nullptr;
+    }
     if (servos[num].servonum == 0) {
         servos[num].servonum = num;
         servos[num].MC = this;
@@ -110,20 +112,20 @@ Servo *MotorShield::getServo(uint8_t num) {
                SERVOS
 ******************************************/
 
-Servo::Servo(void) {
-    MC = NULL;
+Servo::Servo() {
+    MC = nullptr;
     servonum = 0;
     PWMpin = 0;
     currentAngle = 0;
 }
 
 void Servo::setServoPulse(double pulse) {
-    double pulselength;
-    pulselength = 1000000;   // 1,000,000 us per second
-    pulselength /= 50;   // 50 Hz
-    pulselength /= 4096;  // 12 bits of resolution
+    double pulseLength;
+    pulseLength = 1000000;   // 1,000,000 us per second
+    pulseLength /= 50;   // 50 Hz
+    pulseLength /= 4096;  // 12 bits of resolution
     pulse *= 1000;
-    pulse /= pulselength;
+    pulse /= pulseLength;
     MC->setPWM(PWMpin, pulse);
 }
 
@@ -142,8 +144,8 @@ uint8_t Servo::readDegrees() {
                MOTORS
 ******************************************/
 
-DCMotor::DCMotor(void) {
-    MC = NULL;
+DCMotor::DCMotor() {
+    MC = nullptr;
     motornum = 0;
     _speed = IN1pin = IN2pin = 0;
 }
@@ -167,6 +169,8 @@ void DCMotor::run(uint8_t cmd) {
             MC->setPin(IN1pin, 1);
             MC->setPin(IN2pin, 1);
             break;
+        default:
+            break;
     }
 }
 
@@ -179,7 +183,7 @@ void DCMotor::setSpeed(uint8_t speed) {
                STEPPERS
 ******************************************/
 
-StepperMotor::StepperMotor(void) {
+StepperMotor::StepperMotor() {
     revsteps = steppernum = currentstep = 0;
 }
 
@@ -188,7 +192,7 @@ void StepperMotor::setSpeed(uint16_t rpm) {
     usperstep = 50000000 / ((uint32_t) revsteps * (uint32_t) rpm);
 }
 
-void StepperMotor::release(void) {
+void StepperMotor::release() {
     MC->setPin(AIN1pin, 0);
     MC->setPin(AIN2pin, 0);
     MC->setPin(BIN1pin, 0);
@@ -208,12 +212,12 @@ void StepperMotor::step(uint16_t steps, uint8_t dir, uint8_t style) {
     }
 
     while (steps--) {
-        ret = onestep(dir, style);
+        ret = oneStep(dir, style);
         delayMicroseconds(uspers);
     }
 }
 
-uint8_t StepperMotor::onestep(uint8_t dir, uint8_t style) {
+uint8_t StepperMotor::oneStep(uint8_t dir, uint8_t style) {
     uint8_t a, b, c, d;
     uint8_t ocrb, ocra;
 

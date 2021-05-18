@@ -35,7 +35,7 @@ public:
 
 private:
     uint8_t _i2caddr;
-    int fd;
+    int fd{};
 
     uint8_t read8(uint8_t addr);
 

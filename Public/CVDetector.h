@@ -96,7 +96,6 @@ public:
     void destroy() {
         try {
             detectorAgregator->tracker->stop();
-            delete detectorAgregator;
         } catch (const Exception &e) {
             cout << "nativeestroyObject caught Exception: " << e.what();
         } catch (...) {
