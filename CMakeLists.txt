@@ -31,7 +31,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
             ThirdParty/PiServo/MotorDriver.cpp
             ThirdParty/PiServo/MotorShield.cpp
             ThirdParty/PiServo/RaspiI2c.cpp
-            Public/servo.h)
+            )
     set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ThirdParty/zmq/pi/libzmq.a)
 
     target_link_libraries(

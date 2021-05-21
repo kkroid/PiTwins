@@ -10,6 +10,7 @@ using namespace std;
 void VideoPublisher::detect(Mat &matFrame, vector<Rect> &rectFaces) {
     Mat grayImg, resizedMat;
     cvtColor(matFrame, grayImg, COLOR_BGR2GRAY);
+    // 对缩小了2倍的图片进行检测
     int scale = 2;
     resize(grayImg, resizedMat, Size(grayImg.cols / scale, grayImg.rows / scale));
     cvDetector.detect(resizedMat, &rectFaces);

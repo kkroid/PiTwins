@@ -115,11 +115,11 @@ public:
             int key = obj["payload"]["key"];
             switch (key) {
                 case 0:
-                    server2Angle--;
+                    server2Angle -= 4;
                     Pwm.getServo(SERVO_VERTICAL)->writeServo(server2Angle);
                     break;
                 case 1:
-                    server2Angle++;
+                    server2Angle += 4;
                     Pwm.getServo(SERVO_VERTICAL)->writeServo(server2Angle);
                     break;
                 case 2: // left
@@ -129,10 +129,6 @@ public:
                 case 3: // right
                     servo1Angle--;
                     Pwm.getServo(SERVO_HORIZONTAL)->writeServo(servo1Angle);
-                    break;
-                case 113:
-                    streaming = false;
-                    spdlog::info("cancel");
                     break;
                 default:
                     break;

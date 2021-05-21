@@ -6,6 +6,8 @@
 #include "time_util.h"
 #include "Frame.h"
 
+#define SECOND 1000
+
 class FrameTask {
 public:
     int32_t fps = 2;
@@ -27,12 +29,8 @@ public:
      */
     bool ignoreFrame() {
         long now = TimeUtil::now();
-//        if (lastFrameTime == -1) {
-//            lastFrameTime = now;
-//        }
-        if (now - lastFrameTime < 1000) {
+        if (now - lastFrameTime < SECOND) {
             if (frameCount >= fps) {
-                // LOGI("%s ignored, frameCount = %d, fps = %d", name.c_str(), frameCount, fps);
                 return true;
             }
         } else {

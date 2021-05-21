@@ -34,7 +34,7 @@ public:
     }
 
     ~CascadeDetectorAdapter() override {
-        cout << "CascadeDetectorAdapter::Detect::~Detect" << endl;
+        cout << "~CascadeDetectorAdapter" << endl;
     }
 
 private:

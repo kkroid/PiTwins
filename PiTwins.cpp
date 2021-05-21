@@ -17,8 +17,9 @@ int main(int argc, char *argv[]) {
     socket_t *publisher;
     publisher = new socket_t(ctx, zmq::socket_type::pub);
     publisher->bind(ZMQ_PUB_ADDR);
-    auto *cmdReceiver = new socket_t(ctx, zmq::socket_type::pull);
+    auto *cmdReceiver = new socket_t(ctx, zmq::socket_type::sub);
     cmdReceiver->bind(ZMQ_PULL_ADDR);
+    cmdReceiver->set(sockopt::subscribe, "");
 
     auto *videoPublisher = new VideoPublisher(publisher, cmdReceiver);
     auto videoPublisherThread = async(launch::async, [](char* id, Publisher *videoPublisher) {
@@ -37,12 +38,12 @@ int main(int argc, char *argv[]) {
     // delete statusPublisher;
 
 
-    cmdReceiver->unbind(ZMQ_PULL_ADDR);
-    cmdReceiver->close();
-    delete cmdReceiver;
-    publisher->unbind(ZMQ_PUB_ADDR);
-    publisher->close();
-    delete publisher;
+    // cmdReceiver->unbind(ZMQ_PULL_ADDR);
+    // cmdReceiver->close();
+    // delete cmdReceiver;
+    // publisher->unbind(ZMQ_PUB_ADDR);
+    // publisher->close();
+    // delete publisher;
 
     spdlog::info("thread done");
 }
