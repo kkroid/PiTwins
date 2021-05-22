@@ -1,4 +1,6 @@
+#include <iostream>
 #include "MotorShield.h"
+#include "ostream"
 
 #if (MICROSTEPS == 8)
 uint8_t microstepcurve[] = {0, 50, 98, 142, 180, 212, 236, 250, 255};
@@ -150,7 +152,7 @@ DCMotor::DCMotor() {
     _speed = IN1pin = IN2pin = 0;
 }
 
-void DCMotor::run(uint8_t cmd) {
+DCMotor DCMotor::run(uint8_t cmd) {
     MDIR = cmd;
     switch (cmd) {
         case FORWARD:
@@ -172,11 +174,14 @@ void DCMotor::run(uint8_t cmd) {
         default:
             break;
     }
+    std::cout << "run:" << (int)motornum << ", speed:" << (int)_speed << "\n";
+    return *this;
 }
 
-void DCMotor::setSpeed(uint8_t speed) {
+DCMotor DCMotor::setSpeed(uint8_t speed) {
     _speed = speed;
-    run(MDIR);
+    std::cout << "pin:" << (int)motornum << ", speed:" << (int)speed << "\n";
+    return *this;
 }
 
 /******************************************

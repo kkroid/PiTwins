@@ -1,5 +1,5 @@
-#ifndef _Emakefun_MotorDriver_H
-#define _Emakefun_MotorDriver_H
+#ifndef MotorDriver_H
+#define MotorDriver_H
 
 #include "RaspiI2c.h"
 

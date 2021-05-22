@@ -4,8 +4,8 @@
  
  ******************************************************************/
 
-#ifndef _Emakefun_MotorShield_h_
-#define _Emakefun_MotorShield_h_
+#ifndef MotorShield_h_
+#define MotorShield_h_
 
 #include "MotorDriver.h"
 
@@ -38,11 +38,13 @@ class DCMotor {
 public:
     DCMotor();
 
-    friend class Emakefun_MotorShield;
+    DCMotor run(uint8_t);
 
-    void run(uint8_t);
+    DCMotor setSpeed(uint8_t);
 
-    void setSpeed(uint8_t);
+    uint8_t getDir() {
+        return MDIR;
+    }
 
     uint8_t _speed, IN1pin, IN2pin, MDIR{};
     MotorShield *MC;
@@ -52,8 +54,6 @@ public:
 class StepperMotor {
 public:
     StepperMotor();
-
-    friend class Emakefun_MotorShield;
 
     void step(uint16_t steps, uint8_t dir, uint8_t style = SINGLE);
 
@@ -76,8 +76,6 @@ public:
 class Servo {
 public:
     Servo();
-
-    friend class Emakefun_MotorShield;
 
     void setServoPulse(double pulse);
 

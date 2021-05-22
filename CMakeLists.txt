@@ -16,7 +16,7 @@ include_directories(ThirdParty/zmq/include)
 include_directories(ThirdParty/cptl)
 include_directories(ThirdParty/json)
 include_directories(ThirdParty/spdlog)
-include_directories(ThirdParty/PiServo)
+include_directories(ThirdParty/Pi)
 include_directories(Public)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -28,9 +28,9 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
     add_executable(PiTwins PiTwins.cpp
             Private/VideoPublisher.cpp
             Private/StatusPublisher.cpp
-            ThirdParty/PiServo/MotorDriver.cpp
-            ThirdParty/PiServo/MotorShield.cpp
-            ThirdParty/PiServo/RaspiI2c.cpp
+            ThirdParty/Pi/MotorDriver.cpp
+            ThirdParty/Pi/MotorShield.cpp
+            ThirdParty/Pi/RaspiI2c.cpp
             )
     set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ThirdParty/zmq/pi/libzmq.a)
 
