@@ -93,7 +93,7 @@ public:
                 if (matFrame.empty()) {
                     spdlog::info("VideoPublisher got an empty mat frame, ignore");
                     matFrame.release();
-                    break;
+                    continue;
                 }
                 // vector<Rect> rectFaces;
                 // detect(matFrame, rectFaces);
@@ -128,19 +128,19 @@ public:
             int value = obj["payload"]["value"];
             if (type == TYPE_SERVO) {
                 switch (key) {
-                    case 0:
+                    case 1:
                         server2Angle--;
                         pwm.getServo(SERVO_VERTICAL)->writeServo(server2Angle);
                         break;
-                    case 1:
+                    case 2:
                         server2Angle++;
                         pwm.getServo(SERVO_VERTICAL)->writeServo(server2Angle);
                         break;
-                    case 2:
+                    case 3:
                         servo1Angle++;
                         pwm.getServo(SERVO_HORIZONTAL)->writeServo(servo1Angle);
                         break;
-                    case 3:
+                    case 4:
                         servo1Angle--;
                         pwm.getServo(SERVO_HORIZONTAL)->writeServo(servo1Angle);
                         break;
