@@ -31,10 +31,12 @@ void VideoPublisher::detect(Mat &matFrame, vector<Rect> &rectFaces) {
 
 Frame *VideoPublisher::compressFrameData(Mat &matFrame) {
     vector<uchar> buff;
+    spdlog::info("before compressFrameData:{}", matFrame.total() * matFrame.elemSize());
     // imencode(".webp", matFrame, buff, params);
     imencode(".jpg", matFrame, buff, params);
     auto *data = new uchar[buff.size()];
     copy(buff.begin(), buff.end(), data);
+    spdlog::info("after compressFrameData:{}", sizeof(uchar) * buff.size());
     return new Frame(data, sizeof(uchar) * buff.size());
 }
 

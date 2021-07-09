@@ -46,7 +46,7 @@ public:
     explicit VideoPublisher(socket_t *publisher, socket_t *cmdReceiver) : Publisher(publisher) {
         cvDetector.create("../Data/lbpcascade_frontalface.xml");
         // params.push_back(IMWRITE_WEBP_QUALITY);
-        // params.push_back(100);
+        // params.push_back(75);
         params.push_back(IMWRITE_JPEG_QUALITY);
         params.push_back(60);
         // params.push_back(IMWRITE_JPEG_OPTIMIZE);
