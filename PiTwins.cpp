@@ -1,17 +1,26 @@
+#define USE_ZMQ 0
+
+#if USE_ZMQ
 #include <future>
 #include <iostream>
 #include <VideoPublisher.h>
 #include <StatusPublisher.h>
 #include "zmq.hpp"
 
-
-using namespace std;
 using namespace nlohmann;
 
-
 #define ZMQ_PUB_ADDR "tcp://*:5555"
+#else
+
+#include "Server.h"
+#include <tcp_conn.h>
+
+#endif
+
+using namespace std;
 
 int main(int argc, char *argv[]) {
+#if USE_ZMQ
     // spdlog::info("start zmq server:{}", argv[1]);
     zmq::context_t ctx;
     socket_t *publisher;
@@ -46,4 +55,17 @@ int main(int argc, char *argv[]) {
     // delete publisher;
 
     spdlog::info("thread done");
+#else
+    Server::getInstance().init("0.0.0.0:5555", [](const evpp::TCPConnPtr &connPtr) {
+        if (connPtr->IsConnected()) {
+            spdlog::info("Client {} Connected", connPtr->remote_addr());
+            connPtr->Send("Hello:" + connPtr->remote_addr());
+        } else {
+            spdlog::info("Client {} Disconnected", connPtr->remote_addr());
+        }
+    }, [](const evpp::TCPConnPtr &connPtr, evpp::Buffer *buffer) {
+        spdlog::info("Server Received A Message:[{}]", buffer->ToString());
+    });
+    Server::getInstance().run();
+#endif
 }
