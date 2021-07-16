@@ -14,6 +14,7 @@ using namespace nlohmann;
 
 #include "Server.h"
 #include <tcp_conn.h>
+#include "MessageReceiver.h"
 
 #endif
 
@@ -59,12 +60,13 @@ int main(int argc, char *argv[]) {
     Server::getInstance().init("0.0.0.0:5555", [](const evpp::TCPConnPtr &connPtr) {
         if (connPtr->IsConnected()) {
             spdlog::info("Client {} Connected", connPtr->remote_addr());
-            connPtr->Send("Hello:" + connPtr->remote_addr());
+            // connPtr->Send("Hello:" + connPtr->remote_addr());
         } else {
             spdlog::info("Client {} Disconnected", connPtr->remote_addr());
         }
     }, [](const evpp::TCPConnPtr &connPtr, evpp::Buffer *buffer) {
         spdlog::info("Server Received A Message:[{}]", buffer->ToString());
+        MessageReceiver::getInstance().onNewMsgReceived(connPtr, buffer);
     });
     Server::getInstance().run();
 #endif
