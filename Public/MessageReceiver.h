@@ -45,8 +45,7 @@ public:
         std::string msg = buffer->ToString();
         try {
             nlohmann::json obj = nlohmann::json::parse(msg);
-            int type = obj["type"];
-            MessageProcessor* processor = getOrCreateProcessor(type);
+            MessageProcessor* processor = getOrCreateProcessor(obj["type"]);
             processor->process(obj);
         } catch (nlohmann::detail::exception& e) {
             MessageProcessor::processUnknownMessage(buffer, e.what());

@@ -9,6 +9,7 @@
 #include "spdlog/spdlog.h"
 #include "ctpl_stl.h"
 #include "Frame.h"
+#include "Server.h"
 
 using namespace std;
 using namespace cv;
@@ -24,7 +25,7 @@ private:
 public:
     CameraServer() {
         videoCapture = nullptr;
-        threadPool = new ctpl::thread_pool(1);
+        threadPool = new ctpl::thread_pool(2);
         // params.push_back(IMWRITE_WEBP_QUALITY);
         // params.push_back(75);
         params.push_back(IMWRITE_JPEG_QUALITY);
@@ -64,6 +65,8 @@ public:
     bool isStreaming() {
         return streaming;
     }
+
+    void onNewConnectionReceived(const evpp::TCPConnPtr &connPtr);
 };
 
 #endif //PITWINS_CAMERASERVER_H

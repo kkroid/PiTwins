@@ -13,47 +13,67 @@
 #include "slice.h"
 #include "buffer.h"
 
+#define ADDR_CMD_SERVER "0.0.0.0:5556"
+#define ADDR_VIDEO_SERVER "0.0.0.0:5555"
+#define NAME_CMD_SERVER "CMDServer"
+#define NAME_VIDEO_SERVER "VideoServer"
+#define THREAD_NUM_VIDEO_SERVER 4
+#define THREAD_NUM_CMD_SERVER 4
+
 
 class Server {
 private:
-    int DEFAULT_THREAD_NUM = 4;
+    int threadNum = THREAD_NUM_CMD_SERVER;
+    std::string addr = ADDR_CMD_SERVER;
+    std::string name = NAME_CMD_SERVER;
     evpp::TCPServer *server = nullptr;
     evpp::EventLoop *loop = nullptr;
-public:
     std::shared_ptr<evpp::TCPConn> tcpConnPtr = nullptr;
+public:
 
     Server() = default;
 
     ~Server() {
         spdlog::info("~Server");
+        if (tcpConnPtr) {
+            tcpConnPtr->Close();
+        }
         delete loop;
         delete server;
     }
 
-    static Server &getInstance() {
-        static Server instance;
-        return instance;
+    static Server &getVideoInstance() {
+        static Server videoInstance;
+        videoInstance.addr = ADDR_VIDEO_SERVER;
+        videoInstance.name = NAME_VIDEO_SERVER;
+        videoInstance.threadNum = THREAD_NUM_VIDEO_SERVER;
+        return videoInstance;
     }
 
-    void init(const std::string &addr, const evpp::ConnectionCallback &ccb, const evpp::MessageCallback &mcb) {
-        loop = new evpp::EventLoop();
-        server = new evpp::TCPServer(loop, addr, "PiServer", DEFAULT_THREAD_NUM);
-        server->SetConnectionCallback([this, ccb](const evpp::TCPConnPtr &connPtr) {
-            if (connPtr->IsConnected()) {
-                if (tcpConnPtr == nullptr) {
-                    tcpConnPtr = connPtr;
-                }
-            } else if (connPtr->IsDisconnected()) {
-                tcpConnPtr = nullptr;
-            }
-            ccb(connPtr);
-        });
-        server->SetMessageCallback([this, mcb](const evpp::TCPConnPtr &connPtr, evpp::Buffer *buffer) {
-            mcb(connPtr, buffer);
-        });
+    static Server &getCMDInstance() {
+        static Server cmdInstance;
+        cmdInstance.addr = ADDR_CMD_SERVER;
+        cmdInstance.name = NAME_CMD_SERVER;
+        cmdInstance.threadNum = THREAD_NUM_CMD_SERVER;
+        return cmdInstance;
     }
+
+    void init() {
+        loop = new evpp::EventLoop();
+        server = new evpp::TCPServer(loop, addr, name, threadNum);
+        setConnectionCallback(nullptr);
+        setMessageCallback(nullptr);
+    }
+
+    void setConnectionCallback(const evpp::ConnectionCallback &ccb);
+
+    void setMessageCallback(const evpp::MessageCallback &mcb);
 
     void run();
+
+    bool isRunning() {
+        return server != nullptr && server->IsRunning();
+    }
 
     void send(const char *s) {
         send(s, strlen(s));
@@ -62,6 +82,7 @@ public:
     void send(const void *d, size_t dlen) {
         if (tcpConnPtr) {
             tcpConnPtr->Send(d, dlen);
+            // spdlog::info("send data to {}", tcpConnPtr->remote_addr());
         }
     }
 
@@ -82,6 +103,8 @@ public:
             tcpConnPtr->Send(buf);
         }
     }
+
+    void release();
 
     // 拒绝拷贝构造
     Server(const Server &rhs) = delete;
