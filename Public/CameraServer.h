@@ -60,13 +60,10 @@ public:
 
     void onFrame(Mat frame);
 
-    Frame *compressFrameData(Mat &matFrame);
-
     bool isStreaming() {
         return streaming;
     }
 
-    void onNewConnectionReceived(const evpp::TCPConnPtr &connPtr);
 };
 
 #endif //PITWINS_CAMERASERVER_H

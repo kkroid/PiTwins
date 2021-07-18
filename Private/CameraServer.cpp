@@ -7,18 +7,10 @@
 void CameraServer::open(int id) {
     auto videoServer = async(launch::async, []() {
         if (Server::getVideoInstance().isRunning()) {
-            Server::getVideoInstance().release();
+            return;
         }
         spdlog::info("Video server not running, start it");
         Server::getVideoInstance().init();
-        // Server::getVideoInstance().setConnectionCallback([this](const evpp::TCPConnPtr &connPtr) {
-        //     if (connPtr->IsConnected()) {
-        //         onNewConnectionReceived(connPtr);
-        //     } else if (connPtr->IsDisconnected()) {
-        //         close();
-        //         Server::getVideoInstance().release();
-        //     }
-        // });
         Server::getVideoInstance().run();
     });
     if (isOpened) {
@@ -50,11 +42,6 @@ void CameraServer::open(int id) {
     }
 }
 
-// TODO 适配多个连接
-void CameraServer::onNewConnectionReceived(const evpp::TCPConnPtr &connPtr) {
-    // Server::getCMDInstance().send("xxx");
-}
-
 void CameraServer::close() {
     streaming = false;
     if (videoCapture) {
@@ -69,20 +56,10 @@ void CameraServer::onFrame(Mat frame) {
         frame.release();
         return;
     }
-    Frame *f = compressFrameData(frame);
-    Server::getVideoInstance().send(f->data, f->size);
-    // spdlog::info("Got a frame:{}", f->size);
-    delete f;
-    frame.release();
-}
 
-Frame *CameraServer::compressFrameData(Mat &matFrame) {
     vector<uchar> buff;
-    // spdlog::info("before compressFrameData:{}", matFrame.total() * matFrame.elemSize());
     // imencode(".webp", matFrame, buff, params);
-    imencode(".jpg", matFrame, buff, params);
-    auto *data = new uchar[buff.size()];
-    copy(buff.begin(), buff.end(), data);
-    // spdlog::info("after compressFrameData:{}", sizeof(uchar) * buff.size());
-    return new Frame(data, sizeof(uchar) * buff.size());
+    imencode(".jpg", frame, buff, params);
+    Server::getVideoInstance().send(buff.data(), buff.size());
+    frame.release();
 }
