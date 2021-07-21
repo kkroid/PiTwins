@@ -8,6 +8,7 @@
 #include "json.hpp"
 #include "spdlog/spdlog.h"
 #include <buffer.h>
+#include "MessageGenerator.h"
 
 class MessageProcessor {
 public:

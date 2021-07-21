@@ -1,4 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/PiRPC/evpp/public)
+include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/PiRPC/common/public)
 
 file(GLOB pirpc_s_srcs ${CMAKE_SOURCE_DIR}/ThirdParty/PiRPC/server/private/*.cpp)
 file(GLOB pirpc_c_srcs ${CMAKE_SOURCE_DIR}/ThirdParty/PiRPC/client/private/*.cpp)

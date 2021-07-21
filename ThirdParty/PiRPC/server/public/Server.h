@@ -12,20 +12,21 @@
 #include <event_loop.h>
 #include "slice.h"
 #include "buffer.h"
+#include "MessageReceiver.h"
 
-#define ADDR_CMD_SERVER "0.0.0.0:5556"
+#define ADDR_MSG_SERVER "0.0.0.0:5556"
 #define ADDR_VIDEO_SERVER "0.0.0.0:5555"
-#define NAME_CMD_SERVER "CMDServer"
+#define NAME_MSG_SERVER "MsgServer"
 #define NAME_VIDEO_SERVER "VideoServer"
 #define THREAD_NUM_VIDEO_SERVER 4
-#define THREAD_NUM_CMD_SERVER 4
+#define THREAD_NUM_MSG_SERVER 4
 
 
 class Server {
 private:
-    int threadNum = THREAD_NUM_CMD_SERVER;
-    std::string addr = ADDR_CMD_SERVER;
-    std::string name = NAME_CMD_SERVER;
+    int threadNum = THREAD_NUM_MSG_SERVER;
+    std::string addr = ADDR_MSG_SERVER;
+    std::string name = NAME_MSG_SERVER;
     evpp::TCPServer *server = nullptr;
     evpp::EventLoop *loop = nullptr;
     std::shared_ptr<evpp::TCPConn> tcpConnPtr = nullptr;
@@ -50,12 +51,12 @@ public:
         return videoInstance;
     }
 
-    static Server &getCMDInstance() {
-        static Server cmdInstance;
-        cmdInstance.addr = ADDR_CMD_SERVER;
-        cmdInstance.name = NAME_CMD_SERVER;
-        cmdInstance.threadNum = THREAD_NUM_CMD_SERVER;
-        return cmdInstance;
+    static Server &getMsgInstance() {
+        static Server msgInstance;
+        msgInstance.addr = ADDR_MSG_SERVER;
+        msgInstance.name = NAME_MSG_SERVER;
+        msgInstance.threadNum = THREAD_NUM_MSG_SERVER;
+        return msgInstance;
     }
 
     void init() {
@@ -82,26 +83,12 @@ public:
     void send(const void *d, size_t dlen) {
         if (tcpConnPtr) {
             tcpConnPtr->Send(d, dlen);
-            // spdlog::info("send data to {}", tcpConnPtr->remote_addr());
+            // spdlog::info("{} send a msg to {}", name, tcpConnPtr->remote_addr());
         }
     }
 
     void send(const std::string &d) {
-        if (tcpConnPtr) {
-            tcpConnPtr->Send(d);
-        }
-    }
-
-    void send(const evpp::Slice &message) {
-        if (tcpConnPtr) {
-            tcpConnPtr->Send(message);
-        }
-    }
-
-    void send(evpp::Buffer *buf) {
-        if (tcpConnPtr) {
-            tcpConnPtr->Send(buf);
-        }
+        send(d.c_str());
     }
 
     void release();

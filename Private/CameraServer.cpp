@@ -3,9 +3,11 @@
 //
 #include "CameraServer.h"
 #include <future>
+#include "MessageGenerator.h"
 
 void CameraServer::open(int id) {
     auto videoServer = async(launch::async, []() {
+        Server::getMsgInstance().send(MessageGenerator::gen(TYPE_CAMERA_OPENED, "{}"));
         if (Server::getVideoInstance().isRunning()) {
             return;
         }
@@ -56,7 +58,6 @@ void CameraServer::onFrame(Mat frame) {
         frame.release();
         return;
     }
-
     vector<uchar> buff;
     // imencode(".webp", matFrame, buff, params);
     imencode(".jpg", frame, buff, params);
