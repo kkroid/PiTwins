@@ -33,11 +33,6 @@ void Server::setConnectionCallback(const evpp::ConnectionCallback &ccb) {
             if (connPtr->IsConnected()) {
                 spdlog::info("[{}]:Client {} Connected", name, connPtr->remote_addr());
                 // TODO 这里是新连接覆盖旧连接，将来改成支持多连接
-                if (tcpConnPtr) {
-                    spdlog::info("[{}]:Close previous connection {}", name, tcpConnPtr->remote_addr());
-                    tcpConnPtr->Close();
-                    tcpConnPtr = nullptr;
-                }
                 tcpConnPtr = connPtr;
             } else if (connPtr->IsDisconnected()) {
                 spdlog::info("[{}]:Client {} Disconnected", name, connPtr->remote_addr());

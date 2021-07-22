@@ -6,15 +6,14 @@
 #include "MessageGenerator.h"
 
 void CameraServer::open(int id) {
-    auto videoServer = async(launch::async, []() {
-        Server::getMsgInstance().send(MessageGenerator::gen(TYPE_CAMERA_OPENED, "{}"));
-        if (Server::getVideoInstance().isRunning()) {
-            return;
-        }
-        spdlog::info("Video server not running, start it");
-        Server::getVideoInstance().init();
-        Server::getVideoInstance().run();
-    });
+    if (!Server::getVideoInstance().isRunning()) {
+        threadPool->push([](int id) {
+            spdlog::info("Video server not running, start it");
+            Server::getVideoInstance().init(ADDR_VIDEO_SERVER, NAME_VIDEO_SERVER);
+            Server::getVideoInstance().run();
+        });
+    }
+    Server::getMsgInstance().send(MessageGenerator::gen(TYPE_CAMERA_OPENED, "{}"));
     if (isOpened) {
         spdlog::info("Camera is opened");
     } else {

@@ -10,6 +10,8 @@
 #include <buffer.h>
 #include <tcp_conn.h>
 #include <event_loop.h>
+
+#include <utility>
 #include "slice.h"
 #include "buffer.h"
 #include "MessageReceiver.h"
@@ -18,13 +20,12 @@
 #define ADDR_VIDEO_SERVER "0.0.0.0:5555"
 #define NAME_MSG_SERVER "MsgServer"
 #define NAME_VIDEO_SERVER "VideoServer"
-#define THREAD_NUM_VIDEO_SERVER 4
-#define THREAD_NUM_MSG_SERVER 4
+#define THREAD_NUM 1
 
 
 class Server {
 private:
-    int threadNum = THREAD_NUM_MSG_SERVER;
+    int threadNum = THREAD_NUM;
     std::string addr = ADDR_MSG_SERVER;
     std::string name = NAME_MSG_SERVER;
     evpp::TCPServer *server = nullptr;
@@ -45,25 +46,22 @@ public:
 
     static Server &getVideoInstance() {
         static Server videoInstance;
-        videoInstance.addr = ADDR_VIDEO_SERVER;
-        videoInstance.name = NAME_VIDEO_SERVER;
-        videoInstance.threadNum = THREAD_NUM_VIDEO_SERVER;
         return videoInstance;
     }
 
     static Server &getMsgInstance() {
         static Server msgInstance;
-        msgInstance.addr = ADDR_MSG_SERVER;
-        msgInstance.name = NAME_MSG_SERVER;
-        msgInstance.threadNum = THREAD_NUM_MSG_SERVER;
         return msgInstance;
     }
 
-    void init() {
+    void init(std::string address, std::string serverName, const evpp::ConnectionCallback &ccb = nullptr,
+              const evpp::MessageCallback &mcb = nullptr) {
+        addr = std::move(address);
+        name = std::move(serverName);
         loop = new evpp::EventLoop();
         server = new evpp::TCPServer(loop, addr, name, threadNum);
-        setConnectionCallback(nullptr);
-        setMessageCallback(nullptr);
+        setConnectionCallback(ccb);
+        setMessageCallback(mcb);
     }
 
     void setConnectionCallback(const evpp::ConnectionCallback &ccb);

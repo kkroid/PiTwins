@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 
     spdlog::info("thread done");
 #else
-    Server::getMsgInstance().init();
+    Server::getMsgInstance().init(ADDR_MSG_SERVER, NAME_MSG_SERVER);
     Server::getMsgInstance().run();
 #endif
 }
