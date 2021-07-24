@@ -20,7 +20,7 @@
 #define ADDR_VIDEO_SERVER "0.0.0.0:5555"
 #define NAME_MSG_SERVER "MsgServer"
 #define NAME_VIDEO_SERVER "VideoServer"
-#define THREAD_NUM 1
+#define THREAD_NUM 2
 
 
 class Server {

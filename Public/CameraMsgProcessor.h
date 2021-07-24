@@ -7,6 +7,10 @@
 
 #include "MessageProcessor.h"
 
+#define CAMERA_CMD_OPEN 0
+#define CAMERA_CMD_CLOSE 1
+#define CAMERA_CMD_OPENED 2
+
 class CameraMsgProcessor : public MessageProcessor {
 public:
     void process(nlohmann::json msg) override;

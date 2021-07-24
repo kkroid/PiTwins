@@ -13,13 +13,17 @@ void CameraServer::open(int id) {
             Server::getVideoInstance().run();
         });
     }
-    Server::getMsgInstance().send(MessageGenerator::gen(TYPE_CAMERA_OPENED, "{}"));
+    Server::getMsgInstance().send(MessageGenerator::genCamera(CAMERA_CMD_OPENED, 0));
     if (isOpened) {
         spdlog::info("Camera is opened");
     } else {
         isOpened = true;
-        videoCapture = new VideoCapture(id);
-        spdlog::info("CameraServer opened with camera id:{}", id);
+        videoCapture = new VideoCapture();
+        if (videoCapture->open(id)) {
+            spdlog::info("CameraServer opened with camera id:{}", id);
+        } else {
+            spdlog::error("CameraServer opened with camera id:{} failed", id);
+        }
         // videoCapture = new VideoCapture("http://127.0.0.1:8081/?action=stream");
         int ret = videoCapture->set(CAP_PROP_FPS, 15);
         spdlog::info("set fps success:{}, read:{}", ret, videoCapture->get(CAP_PROP_FPS));

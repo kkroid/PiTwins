@@ -44,6 +44,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
             )
     set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ThirdParty/zmq/pi/libzmq.so.5.2.3)
 
+    add_definitions(-DPiRPC_TYPE=0)
     add_subdirectory(ThirdParty/PiRPC)
 
     target_link_libraries(

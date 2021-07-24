@@ -7,10 +7,10 @@
 void CameraMsgProcessor::process(nlohmann::json msg) {
     int cmd = msg["payload"]["cmd"];
     switch (cmd) {
-        case TYPE_OPEN_CAMERA:
+        case CAMERA_CMD_OPEN:
             CameraServer::getInstance().open(msg["payload"]["param"]);
             break;
-        case TYPE_CLOSE_CAMERA:
+        case CAMERA_CMD_CLOSE:
             CameraServer::getInstance().close();
             break;
         default:
