@@ -11,7 +11,7 @@
 #define CAMERA_CMD_CLOSE 1
 #define CAMERA_CMD_OPENED 2
 
-class CameraMsgProcessor : public MessageProcessor {
+class CameraMsgProcessor : public PiRPC::MessageProcessor {
 public:
     void process(nlohmann::json msg) override;
 };

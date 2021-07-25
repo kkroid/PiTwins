@@ -13,6 +13,7 @@ using namespace nlohmann;
 #else
 
 #include "Server.h"
+#include "MessageReceiver.h"
 
 #endif
 
@@ -55,7 +56,10 @@ int main(int argc, char *argv[]) {
 
     spdlog::info("thread done");
 #else
-    Server::getMsgInstance().init(ADDR_MSG_SERVER, NAME_MSG_SERVER);
-    Server::getMsgInstance().run();
+    PiRPC::Server::getMsgInstance().init(ADDR_MSG_SERVER, NAME_MSG_SERVER);
+    PiRPC::Server::getMsgInstance().setOnNewMsgReceivedCallback([](const char *data, size_t size) {
+        PiRPC::MessageReceiver::getInstance().onNewMsgReceived(std::string(data, size));
+    });
+    PiRPC::Server::getMsgInstance().run();
 #endif
 }

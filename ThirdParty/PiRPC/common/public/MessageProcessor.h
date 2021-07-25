@@ -10,13 +10,14 @@
 #include <buffer.h>
 #include "MessageGenerator.h"
 
-class MessageProcessor {
-public:
-    virtual void process(nlohmann::json msg) = 0;
+namespace PiRPC {
+    class MessageProcessor {
+    public:
+        virtual void process(nlohmann::json msg) = 0;
 
-    static void processUnknownMessage(evpp::Buffer *buffer, const std::string &error) {
-        spdlog::warn("processUnknownMessage error:{}, msg:{}", error, buffer->ToString());
-    }
-};
-
+        static void processUnknownMessage(const std::string& msg, const std::string &error) {
+            spdlog::warn("processUnknownMessage error:{}, msg:{}", error, msg);
+        }
+    };
+}
 #endif //PITWINS_MESSAGEPROCESSOR_H

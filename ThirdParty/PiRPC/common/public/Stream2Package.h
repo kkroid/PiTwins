@@ -1,20 +1,16 @@
 //
-// Created by Will Zhang on 2021/7/12.
+// Created by Will Zhang on 2021/7/25.
 //
-#include "Client.h"
 
-#include <utility>
+#ifndef PITWINSCLIENT_STREAM2PACKAGE_H
+#define PITWINSCLIENT_STREAM2PACKAGE_H
+
+#include "PiRPCCallbacks.h"
 
 namespace PiRPC {
-    void Client::init(std::string address,
-                      std::string clientName,
-                      const evpp::ConnectionCallback &ccb) {
-        addr = std::move(address);
-        name = std::move(clientName);
-        loop = new evpp::EventLoop();
-        client = new evpp::TCPClient(loop, addr, name);
-        setConnectionCallback(ccb);
-        client->SetMessageCallback([this](const evpp::TCPConnPtr &connPtr, evpp::Buffer *buffer) {
+    class Stream2Package {
+    public:
+        static void Do(const OnNewMsgReceived &onNewMsgReceived, evpp::Buffer *buffer) {
             // 拆包分包处理
             int32_t realDataSize = buffer->PeekInt32();
             int32_t headerSize = sizeof(realDataSize);
@@ -28,8 +24,8 @@ namespace PiRPC {
                 spdlog::info("数据充足,realDataSize:{}, currentDataSize:{}, headerSize:{}", realDataSize, currentDataSize,
                              headerSize);
                 buffer->Skip(headerSize);
-                if (_onNewMsgReceived) {
-                    _onNewMsgReceived(buffer->data(), buffer->size());
+                if (onNewMsgReceived) {
+                    onNewMsgReceived(buffer->data(), buffer->size());
                 }
                 // TODO 调查为什么需要reset
                 buffer->Reset();
@@ -43,8 +39,8 @@ namespace PiRPC {
                         buffer->Skip(headerSize);
                         data.Append(buffer->data(), realDataSize);
                         buffer->Skip(realDataSize);
-                        if (_onNewMsgReceived) {
-                            _onNewMsgReceived(data.data(), data.size());
+                        if (onNewMsgReceived) {
+                            onNewMsgReceived(data.data(), data.size());
                         }
                         realDataSize = buffer->PeekInt32();
                         currentDataSize = buffer->size() - headerSize;
@@ -53,31 +49,10 @@ namespace PiRPC {
                     }
                 }
             }
-        });
-    }
-
-    void Client::setConnectionCallback(const evpp::ConnectionCallback &ccb) {
-        if (client) {
-            client->SetConnectionCallback([this, ccb](const evpp::TCPConnPtr &connPtr) {
-                spdlog::info("{} connection status:{}", client->name(), connPtr->status());
-                if (ccb) {
-                    ccb(connPtr);
-                }
-            });
         }
-    }
 
-    void Client::connect() {
-        client->Connect();
-        client->set_auto_reconnect(true);
-        loop->Run();
-    }
 
-    void Client::disconnect() {
-        if (client) {
-            client->conn()->Close();
-            client->Disconnect();
-            loop->Stop();
-        }
-    }
+    };
 }
+
+#endif //PITWINSCLIENT_STREAM2PACKAGE_H

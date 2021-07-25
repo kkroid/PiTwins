@@ -4,6 +4,9 @@
 #include "CameraServer.h"
 #include <future>
 #include "MessageGenerator.h"
+#include "CameraMsgProcessor.h"
+
+using namespace PiRPC;
 
 void CameraServer::open(int id) {
     if (!Server::getVideoInstance().isRunning()) {

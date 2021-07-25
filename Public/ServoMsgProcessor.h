@@ -22,7 +22,7 @@
 #define LEFT_MOTOR 1
 #define RIGHT_MOTOR 2
 
-class ServoMsgProcessor : public MessageProcessor {
+class ServoMsgProcessor : public PiRPC::MessageProcessor {
 public:
     ServoMsgProcessor() {
         pwm = MotorShield(I2C_ADDR);
