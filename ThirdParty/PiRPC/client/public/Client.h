@@ -10,6 +10,8 @@
 #include <buffer.h>
 #include <event_loop.h>
 #include <tcp_conn.h>
+#include "Stream2Package.h"
+#include <utility>
 #include "PiRPCCallbacks.h"
 
 
@@ -21,6 +23,7 @@ namespace PiRPC {
         evpp::TCPClient *client = nullptr;
         evpp::EventLoop *loop = nullptr;
         PiRPC::OnNewMsgReceived _onNewMsgReceived = nullptr;
+        PiRPC::OnConnectionChanged _onConnectionChanged = nullptr;
     public:
 
         Client() = default;
@@ -47,12 +50,14 @@ namespace PiRPC {
         // 拒绝拷贝赋值
         Client &operator=(const Client &rhs) = delete;
 
-        void init(std::string address, std::string clientName, const evpp::ConnectionCallback &ccb = nullptr);
+        void init(std::string address, std::string clientName);
 
-        void setConnectionCallback(const evpp::ConnectionCallback &ccb = nullptr);
+        void setOnConnectionChangedCallback(const PiRPC::OnConnectionChanged &onConnectionChanged) {
+            _onConnectionChanged = onConnectionChanged;
+        }
 
-        void setOnNewMsgReceivedCallback(PiRPC::OnNewMsgReceived onNewMsgReceived) {
-            _onNewMsgReceived = std::move(onNewMsgReceived);
+        void setOnNewMsgReceivedCallback(const PiRPC::OnNewMsgReceived &onNewMsgReceived) {
+            _onNewMsgReceived = onNewMsgReceived;
         }
 
         void connect();
@@ -65,7 +70,10 @@ namespace PiRPC {
 
         void Send(const void *d, size_t dlen) {
             if (client && client->conn()->IsConnected()) {
-                client->conn()->Send(d, dlen);
+                evpp::Buffer buffer;
+                buffer.AppendInt32(dlen);
+                buffer.Append(d, dlen);
+                client->conn()->Send(&buffer);
             }
         }
 
