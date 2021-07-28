@@ -12,7 +12,6 @@ find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(ThirdParty/zmq/include)
 include_directories(ThirdParty/Pi)
 include_directories(Public)
 include_directories(VideoServer/Public)
@@ -29,42 +28,26 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
-add_library(zmq SHARED IMPORTED)
 
-IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    find_library(wiringPi_LIB wiringPi)
+find_library(wiringPi_LIB wiringPi)
 
-    file(GLOB private_src ${CMAKE_CURRENT_LIST_DIR}/Private/*.cpp)
-    file(GLOB pi_src ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/Pi/*.cpp)
-    file(GLOB video_server_src ${CMAKE_CURRENT_LIST_DIR}/VideoServer/Private/*.cpp)
-    add_executable(PiTwins PiTwins.cpp
-            ${private_src}
-            ${pi_src}
-            ${video_server_src}
-            )
-    set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/zmq/pi/libzmq.so.5.2.3)
+file(GLOB private_src ${CMAKE_CURRENT_LIST_DIR}/Private/*.cpp)
+file(GLOB pi_src ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/Pi/*.cpp)
+file(GLOB video_server_src ${CMAKE_CURRENT_LIST_DIR}/VideoServer/Private/*.cpp)
+add_executable(PiTwins PiTwins.cpp
+        ${private_src}
+        ${pi_src}
+        ${video_server_src}
+        )
 
-    add_definitions(-DPiRPC_TYPE=0)
-    add_subdirectory(ThirdParty/PiRPC)
+add_definitions(-DPiRPC_TYPE=0)
+add_subdirectory(ThirdParty/PiRPC)
 
-    target_link_libraries(
-            PiTwins
-            ${CMAKE_THREAD_LIBS_INIT}
-            zmq
-            ${OpenCV_LIBS}
-            ${wiringPi_LIB}
-            PiRPC
-    )
-ELSE ()
-    add_executable(PiTwins PiTwins.cpp
-            Private/VideoPublisher.cpp
-            Private/StatusPublisher.cpp)
-
-    set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/zmq/mac/libzmq.so.5.2.3)
-
-    target_link_libraries(
-            PiTwins
-            ${CMAKE_THREAD_LIBS_INIT}
-            ${OpenCV_LIBS}
-    )
-ENDIF ()
+target_link_libraries(
+        PiTwins
+        ${CMAKE_THREAD_LIBS_INIT}
+        zmq
+        ${OpenCV_LIBS}
+        ${wiringPi_LIB}
+        PiRPC
+)
