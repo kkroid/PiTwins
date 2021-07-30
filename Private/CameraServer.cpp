@@ -3,7 +3,7 @@
 //
 #include "CameraServer.h"
 #include <future>
-#include "MessageGenerator.h"
+#include "MsgGen.h"
 #include "CameraMsgProcessor.h"
 
 using namespace PiRPC;
@@ -16,7 +16,7 @@ void CameraServer::open(int id) {
             Server::getVideoInstance().run();
         });
     }
-    Server::getMsgInstance().send(MessageGenerator::genCamera(CAMERA_CMD_OPENED, 0));
+    Server::getMsgInstance().send(MsgGen::camera(CAMERA_CMD_OPENED, 0));
     if (isOpened) {
         spdlog::info("Camera is opened");
     } else {
@@ -27,8 +27,7 @@ void CameraServer::open(int id) {
         } else {
             spdlog::error("CameraServer opened with camera id:{} failed", id);
         }
-        // videoCapture = new VideoCapture("http://127.0.0.1:8081/?action=stream");
-        int ret = videoCapture->set(CAP_PROP_FPS, 15);
+        int ret = videoCapture->set(CAP_PROP_FPS, 10);
         spdlog::info("set fps success:{}, read:{}", ret, videoCapture->get(CAP_PROP_FPS));
         videoCapture->set(CAP_PROP_FRAME_WIDTH, 640);
         videoCapture->set(CAP_PROP_FRAME_HEIGHT, 480);
