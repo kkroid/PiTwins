@@ -8,11 +8,13 @@
 #include "MessageDispatcher.h"
 #include "CameraMsgProcessor.h"
 #include "ServoMsgProcessor.h"
-
+#include "HeartbeatMsgProcessor.h"
 
 using namespace PiRPC;
 
 class ServerMsgDispatcher : public PiRPC::MessageDispatcher {
+private:
+
 public:
     ServerMsgDispatcher() = default;
 
@@ -31,9 +33,9 @@ public:
     // 拒绝拷贝赋值
     ServerMsgDispatcher &operator=(const ServerMsgDispatcher &rhs) = delete;
 
-    void dispatch(nlohmann::json msg) override {
+    void dispatch(const TCPConnPtr &connPtr, nlohmann::json msg) override {
         try {
-            MessageProcessor *processor = getOrCreateProcessor(msg["type"]);
+            MessageProcessor *processor = getOrCreateProcessor(connPtr, msg["type"]);
             if (nullptr != processor) {
                 processor->process(msg);
             } else {
@@ -44,20 +46,19 @@ public:
         }
     }
 
-    MessageProcessor *getOrCreateProcessor(int type) {
+    MessageProcessor *getOrCreateProcessor(const TCPConnPtr &connPtr, int type) {
         MessageProcessor *processor = processorMapping[type];
         if (nullptr == processor) {
             switch (type) {
                 case TYPE_HEARTBEAT:
-
+                    processor = new HeartbeatMsgProcessor();
+                    ((HeartbeatMsgProcessor*)processor)->updateConnectionMap(connPtr->id());
                     break;
                 case TYPE_CAMERA_CTRL:
                     processor = new CameraMsgProcessor();
-                    processorMapping[type] = processor;
                     break;
                 case TYPE_SERVO_CTRL:
                     processor = new ServoMsgProcessor();
-                    processorMapping[type] = processor;
                     break;
                 case TYPE_MOTOR_CTRL:
                     spdlog::info("No impl yet:{}", type);
@@ -67,6 +68,7 @@ public:
                     spdlog::warn("No such msg processor:{}", type);
                     break;
             }
+            processorMapping[type] = processor;
         }
         return processor;
     }

@@ -63,6 +63,7 @@ void CameraServer::onFrame(Mat frame) {
         frame.release();
         return;
     }
+    spdlog::info("streaming");
     vector<uchar> buff;
     // imencode(".webp", matFrame, buff, params);
     imencode(".jpg", frame, buff, params);
