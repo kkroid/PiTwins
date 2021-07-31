@@ -2,42 +2,45 @@
 // Created by Will Zhang on 2021/7/27.
 //
 
-#ifndef PITWINS_SERVERMSGRECEIVER_H
-#define PITWINS_SERVERMSGRECEIVER_H
+#ifndef PITWINS_SERVERMSGDISPATCHER_H
+#define PITWINS_SERVERMSGDISPATCHER_H
 
-#include "MessageReceiver.h"
+#include "MessageDispatcher.h"
 #include "CameraMsgProcessor.h"
 #include "ServoMsgProcessor.h"
 
 
 using namespace PiRPC;
 
-class ServerMsgReceiver : public PiRPC::MessageReceiver {
+class ServerMsgDispatcher : public PiRPC::MessageDispatcher {
 public:
-    ServerMsgReceiver() = default;
+    ServerMsgDispatcher() = default;
 
-    ~ServerMsgReceiver() {
+    ~ServerMsgDispatcher() {
         processorMapping.empty();
     }
 
-    static ServerMsgReceiver &getInstance() {
-        static ServerMsgReceiver instance;
+    static ServerMsgDispatcher &getInstance() {
+        static ServerMsgDispatcher instance;
         return instance;
     }
 
     // 拒绝拷贝构造
-    ServerMsgReceiver(const ServerMsgReceiver &rhs) = delete;
+    ServerMsgDispatcher(const ServerMsgDispatcher &rhs) = delete;
 
     // 拒绝拷贝赋值
-    ServerMsgReceiver &operator=(const ServerMsgReceiver &rhs) = delete;
+    ServerMsgDispatcher &operator=(const ServerMsgDispatcher &rhs) = delete;
 
-    void onNewMsgReceived(const std::string& msg) override {
+    void dispatch(nlohmann::json msg) override {
         try {
-            nlohmann::json obj = nlohmann::json::parse(msg);
-            MessageProcessor *processor = getOrCreateProcessor(obj["type"]);
-            processor->process(obj);
-        } catch (nlohmann::detail::exception &e) {
-            MessageProcessor::processUnknownMessage(msg, e.what());
+            MessageProcessor *processor = getOrCreateProcessor(msg["type"]);
+            if (nullptr != processor) {
+                processor->process(msg);
+            } else {
+                MessageProcessor::processUnknownMessage(msg.dump(), "No such msg processor");
+            }
+        } catch (std::exception &e) {
+            MessageProcessor::processUnknownMessage(msg.dump(), e.what());
         }
     }
 
@@ -45,6 +48,9 @@ public:
         MessageProcessor *processor = processorMapping[type];
         if (nullptr == processor) {
             switch (type) {
+                case TYPE_HEARTBEAT:
+
+                    break;
                 case TYPE_CAMERA_CTRL:
                     processor = new CameraMsgProcessor();
                     processorMapping[type] = processor;
@@ -66,4 +72,4 @@ public:
     }
 };
 
-#endif //PITWINS_SERVERMSGRECEIVER_H
+#endif //PITWINS_SERVERMSGDISPATCHER_H
