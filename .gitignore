@@ -11,22 +11,18 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
 # Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
+.idea
+cmake-build-debug-pi
+cmake-build-debug-system
+cmake-build-debug
+build
+
