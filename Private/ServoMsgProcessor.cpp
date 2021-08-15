@@ -1,6 +1,7 @@
 //
 // Created by Will Zhang on 2021/7/15.
 //
+#ifdef Pi
 #include "ServoMsgProcessor.h"
 
 void ServoMsgProcessor::process(nlohmann::json msg) {
@@ -11,3 +12,4 @@ void ServoMsgProcessor::process(nlohmann::json msg) {
     spdlog::info("servo[{}] new angle:{}", servo, angle);
     pwm.getServo(servo)->writeServo(angle);
 }
+#endif

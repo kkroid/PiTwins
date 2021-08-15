@@ -58,7 +58,9 @@ public:
                     processor = new CameraMsgProcessor();
                     break;
                 case TYPE_SERVO_CTRL:
+#ifdef Pi
                     processor = new ServoMsgProcessor();
+#endif
                     break;
                 case TYPE_MOTOR_CTRL:
                     spdlog::info("No impl yet:{}", type);

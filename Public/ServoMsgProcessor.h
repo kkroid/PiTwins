@@ -5,9 +5,13 @@
 #ifndef PITWINS_SERVOMSGPROCESSOR_H
 #define PITWINS_SERVOMSGPROCESSOR_H
 
+#ifdef Pi
+
 #include "MessageProcessor.h"
-#include "MotorShield.h"
 #include "json.hpp"
+
+#include "MotorShield.h"
+
 
 #define I2C_ADDR 0x60
 #define HERTZ 50
@@ -36,4 +40,5 @@ private:
     void process(nlohmann::json msg) override;
 };
 
+#endif
 #endif //PITWINS_SERVOMSGPROCESSOR_H

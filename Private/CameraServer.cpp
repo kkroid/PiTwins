@@ -9,6 +9,7 @@
 using namespace PiRPC;
 
 void CameraServer::open(int id) {
+    spdlog::info("Video server call open");
     if (!Server::getVideoInstance().isRunning()) {
         threadPool->push([](int id) {
             spdlog::info("Video server not running, start it");
@@ -22,12 +23,13 @@ void CameraServer::open(int id) {
     } else {
         isOpened = true;
         videoCapture = new VideoCapture();
-        if (videoCapture->open(id)) {
+        if (videoCapture->open(id, CAP_V4L2)) {
             spdlog::info("CameraServer opened with camera id:{}", id);
         } else {
             spdlog::error("CameraServer opened with camera id:{} failed", id);
+            return;
         }
-        int ret = videoCapture->set(CAP_PROP_FPS, 10);
+        int ret = videoCapture->set(CAP_PROP_FPS, 30);
         spdlog::info("set fps success:{}, read:{}", ret, videoCapture->get(CAP_PROP_FPS));
         videoCapture->set(CAP_PROP_FRAME_WIDTH, 640);
         videoCapture->set(CAP_PROP_FRAME_HEIGHT, 480);

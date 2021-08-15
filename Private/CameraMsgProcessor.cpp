@@ -14,7 +14,7 @@ void CameraMsgProcessor::process(nlohmann::json msg) {
             CameraServer::getInstance().close();
             break;
         default:
-            spdlog::warn("no such cmd:{}", cmd);
+            spdlog::warn("CameraMsgProcessor:no such cmd:{}", cmd);
             break;
     }
 }
