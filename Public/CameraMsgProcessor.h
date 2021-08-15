@@ -5,7 +5,7 @@
 #ifndef PITWINS_CAMERAMSGPROCESSOR_H
 #define PITWINS_CAMERAMSGPROCESSOR_H
 
-#include "MessageProcessor.h"
+#include "commom/MessageProcessor.h"
 
 #define CAMERA_CMD_OPEN 0
 #define CAMERA_CMD_CLOSE 1

@@ -5,7 +5,7 @@
 #ifndef PITWINS_SERVERMSGDISPATCHER_H
 #define PITWINS_SERVERMSGDISPATCHER_H
 
-#include "MessageDispatcher.h"
+#include "commom/MessageDispatcher.h"
 #include "CameraMsgProcessor.h"
 #include "ServoMsgProcessor.h"
 #include "HeartbeatMsgProcessor.h"

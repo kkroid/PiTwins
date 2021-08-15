@@ -5,8 +5,8 @@
 #ifndef PITWINS_HEARTBEATMSGPROCESSOR_H
 #define PITWINS_HEARTBEATMSGPROCESSOR_H
 
-#include "MessageProcessor.h"
-#include "Snowflake.h"
+#include "commom/MessageProcessor.h"
+#include "commom/Snowflake.h"
 
 using namespace PiRPC;
 

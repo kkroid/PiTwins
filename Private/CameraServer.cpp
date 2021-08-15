@@ -3,7 +3,7 @@
 //
 #include "CameraServer.h"
 #include <future>
-#include "MsgGen.h"
+#include "commom/MsgGen.h"
 #include "CameraMsgProcessor.h"
 
 using namespace PiRPC;
