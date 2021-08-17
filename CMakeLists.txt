@@ -10,17 +10,11 @@ add_definitions(-DPiRPC_TYPE=0)
 add_definitions(-DPi=${Pi})
 
 set(CMAKE_CXX_STANDARD 14)
+set(USE_PiRPC_CODE 0)
 
 include_directories(Public)
 include_directories(ThirdParty/OpenCV/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PiRPC/include)
-#include_directories(ThirdParty/PiRPC/cptl)
-#include_directories(ThirdParty/PiRPC/json)
-#include_directories(ThirdParty/PiRPC/spdlog)
-#include_directories(ThirdParty/PiRPC/evpp/public)
-#include_directories(ThirdParty/PiRPC/common/public)
-#include_directories(ThirdParty/PiRPC/server/public)
-#include_directories(ThirdParty/PiRPC/client/public)
 
 add_library(OpenCV SHARED IMPORTED)
 if (${Pi})
@@ -34,7 +28,19 @@ endif ()
 
 file(GLOB private_src ${CMAKE_CURRENT_LIST_DIR}/Private/*.cpp)
 
-add_subdirectory(ThirdParty/PiRPC)
+if (${USE_PiRPC_CODE})
+    add_subdirectory(ThirdParty/PiRPC)
+    set(PiRPC PiRPC)
+else()
+    add_library(PiRPC SHARED IMPORTED)
+    add_library(evpp SHARED IMPORTED)
+    add_library(libevent SHARED IMPORTED)
+    set(PiRPC_DIR ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PiRPC)
+    set_target_properties(PiRPC PROPERTIES IMPORTED_LOCATION ${PiRPC_DIR}/lib/pi/libPiRPC.so)
+    set_target_properties(evpp PROPERTIES IMPORTED_LOCATION ${PiRPC_DIR}/evpp/lib/pi/libevpp.so)
+    set_target_properties(libevent PROPERTIES IMPORTED_LOCATION ${PiRPC_DIR}/evpp/libevent/lib/pi/libevent-2.1.so.7.0.1)
+    set(PiRPC PiRPC evpp libevent)
+endif()
 
 if (${Pi})
     add_executable(PiTwins PiTwins.cpp
@@ -45,7 +51,8 @@ if (${Pi})
             PiTwins
             ${wiringPi_LIB}
             OpenCV
-            PiRPC
+            ${PiRPC}
+            pthread
     )
 else ()
     add_executable(PiTwins PiTwins.cpp
@@ -54,6 +61,6 @@ else ()
     target_link_libraries(
             PiTwins
             OpenCV
-            PiRPC
+            ${PiRPC}
     )
 endif ()
