@@ -6,7 +6,7 @@
 #include "commom/MsgGen.h"
 #include "CameraMsgProcessor.h"
 
-#define ADDR_VIDEO_SERVER "0.0.0.0:5556"
+#define ADDR_VIDEO_SERVER "0.0.0.0:5555"
 #define NAME_VIDEO_SERVER "VideoServer"
 
 using namespace PiRPC;
