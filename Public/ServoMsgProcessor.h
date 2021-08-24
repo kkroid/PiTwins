@@ -5,7 +5,7 @@
 #ifndef PITWINS_SERVOMSGPROCESSOR_H
 #define PITWINS_SERVOMSGPROCESSOR_H
 
-#ifdef Pi
+#if Pi
 
 #include "commom/MessageProcessor.h"
 #include "commom/json.hpp"

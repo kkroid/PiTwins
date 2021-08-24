@@ -3,12 +3,6 @@
 //
 
 #include "HeartbeatMsgProcessor.h"
-#include "commom/json.hpp"
 
 void HeartbeatMsgProcessor::process(nlohmann::json msg) {
-    
-}
-
-void HeartbeatMsgProcessor::updateConnectionMap(uint64_t id) {
-    _connectionMap[id] = Snowflake::GetTimeStamp();
 }

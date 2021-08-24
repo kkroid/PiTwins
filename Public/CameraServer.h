@@ -17,14 +17,13 @@ using namespace cv;
 
 class CameraServer {
 private:
-    VideoCapture *videoCapture;
+    VideoCapture videoCapture{};
     bool streaming = false;
     ctpl::thread_pool *threadPool;
     vector<int> params;
     bool isOpened = false;
 public:
     CameraServer() {
-        videoCapture = nullptr;
         threadPool = new ctpl::thread_pool(2);
         // params.push_back(IMWRITE_WEBP_QUALITY);
         // params.push_back(75);
@@ -37,8 +36,6 @@ public:
     ~CameraServer() {
         spdlog::info("~CameraServer");
         close();
-        delete videoCapture;
-        videoCapture = nullptr;
         delete threadPool;
         threadPool = nullptr;
     }

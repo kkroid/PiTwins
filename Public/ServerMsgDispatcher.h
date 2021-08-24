@@ -37,6 +37,7 @@ public:
         try {
             MessageProcessor *processor = getOrCreateProcessor(connPtr, msg["type"]);
             if (nullptr != processor) {
+                processor->updateConnectionMap(connPtr->id());
                 processor->process(msg);
             } else {
                 MessageProcessor::processUnknownMessage(msg.dump(), "No such msg processor");
@@ -52,13 +53,12 @@ public:
             switch (type) {
                 case TYPE_HEARTBEAT:
                     processor = new HeartbeatMsgProcessor();
-                    ((HeartbeatMsgProcessor*)processor)->updateConnectionMap(connPtr->id());
                     break;
                 case TYPE_CAMERA_CTRL:
                     processor = new CameraMsgProcessor();
                     break;
                 case TYPE_SERVO_CTRL:
-#ifdef Pi
+#if Pi
                     processor = new ServoMsgProcessor();
 #endif
                     break;
