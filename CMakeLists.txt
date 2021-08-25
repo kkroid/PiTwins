@@ -5,8 +5,7 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
-set(Pi 0)
-add_definitions(-DPiRPC_TYPE=0)
+set(Pi 1)
 add_definitions(-DPi=${Pi})
 
 set(CMAKE_CXX_STANDARD 14)
@@ -15,6 +14,7 @@ set(USE_PiRPC_CODE 0)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/Public)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/ThirdParty/OpenCV/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PiRPC/include)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/ThirdParty/Pi/include)
 
 file(GLOB private_src ${CMAKE_CURRENT_LIST_DIR}/Private/*.cpp)
 set(PiRPC_DIR ${CMAKE_CURRENT_LIST_DIR}/ThirdParty/PiRPC)

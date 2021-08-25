@@ -27,7 +27,7 @@ void CameraServer::open(int id) {
         isOpened = true;
         try {
             videoCapture = VideoCapture();
-            if (videoCapture.open(id)) {
+            if (videoCapture.open(id, CAP_V4L2)) {
                 spdlog::info("CameraServer opened with camera id:{}", id);
             } else {
                 spdlog::error("CameraServer opened with camera id:{} failed", id);

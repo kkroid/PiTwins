@@ -15,9 +15,6 @@
 
 #define I2C_ADDR 0x60
 #define HERTZ 50
-#define SERVO_HORIZONTAL 1
-#define SERVO_VERTICAL 2
-#define ZMQ_PULL_ADDR "tcp://*:5556"
 
 #define TYPE_SERVO 1
 #define TYPE_DCMOTOR 2
