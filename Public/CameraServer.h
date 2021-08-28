@@ -10,6 +10,7 @@
 #include "commom/ctpl_stl.h"
 #include "Frame.h"
 #include "Server.h"
+#include "CVDetector.h"
 
 using namespace std;
 using namespace cv;
@@ -18,6 +19,7 @@ using namespace cv;
 class CameraServer {
 private:
     VideoCapture videoCapture{};
+    CVDetector cvDetector;
     bool streaming = false;
     ctpl::thread_pool *threadPool;
     vector<int> params;
@@ -31,6 +33,7 @@ public:
         params.push_back(60);
         // params.push_back(IMWRITE_JPEG_OPTIMIZE);
         // params.push_back(1);
+        cvDetector = CVDetector();
     };
 
     ~CameraServer() {
@@ -60,6 +63,8 @@ public:
     bool isStreaming() {
         return streaming;
     }
+
+    void detect(Mat &matFrame, vector<Rect> &rectFaces);
 
 };
 

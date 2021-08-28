@@ -27,7 +27,11 @@ void CameraServer::open(int id) {
         isOpened = true;
         try {
             videoCapture = VideoCapture();
+#if Pi
             if (videoCapture.open(id, CAP_V4L2)) {
+#else
+            if (videoCapture.open(id)) {
+#endif
                 spdlog::info("CameraServer opened with camera id:{}", id);
             } else {
                 spdlog::error("CameraServer opened with camera id:{} failed", id);
@@ -49,6 +53,7 @@ void CameraServer::open(int id) {
             if (videoCapture.isOpened()) {
                 streaming = true;
                 spdlog::info("CameraServer started streaming");
+                cvDetector.create("../Data/lbpcascade_frontalface.xml");
                 while (streaming) {
                     Mat frame;
                     videoCapture.read(frame);
@@ -65,6 +70,27 @@ void CameraServer::close() {
     isOpened = false;
 }
 
+void CameraServer::detect(Mat &matFrame, vector<Rect> &rectFaces) {
+    Mat grayImg, resizedMat;
+    cvtColor(matFrame, grayImg, COLOR_BGR2GRAY);
+    // 对缩小了2倍的图片进行检测
+    int scale = 2;
+    resize(grayImg, resizedMat, Size(grayImg.cols / scale, grayImg.rows / scale));
+    cvDetector.detect(resizedMat, &rectFaces);
+    // 宽高各缩小了2倍，检测结果需要相应的放大
+    for (auto rect : rectFaces) {
+        rect.x = rect.x * scale;
+        rect.y = rect.y * scale;
+        rect.width = rect.width * scale;
+        rect.height = rect.height * scale;
+        // draw face rect
+        rectangle(matFrame, rect, Scalar(255, 0, 0), 1);
+    }
+
+    grayImg.release();
+    resizedMat.release();
+}
+
 void CameraServer::onFrame(Mat frame) {
     if (!CameraServer::isStreaming()) {
         spdlog::warn("Ignore invalid frame, not streaming");
@@ -72,6 +98,8 @@ void CameraServer::onFrame(Mat frame) {
         return;
     }
     // spdlog::info("streaming");
+    vector<Rect> rectFaces;
+    detect(frame, rectFaces);
     vector<uchar> buff;
     // imencode(".webp", matFrame, buff, params);
     imencode(".jpg", frame, buff, params);
